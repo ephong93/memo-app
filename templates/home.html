@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>notenote</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='mystyle.css')}}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+    </head>
+    <body>
+        <div class="memo-list">
+            <div class="memo-list-header">
+                <i onclick="createMemo()" id="create-memo-button" class="fas fa-plus-circle"></i>
+                <input type="text" id="search-bar" name="search-bar" onkeyup="search()">
+            </div>
+            <div id="memo-item-list">
+                {% for memo in memos %}
+                <div class="memo-item" onclick="showMemo({{ memo['id'] }})" id="memo-item-{{ memo['id'] }}">
+                    <div class="memo-item-title">{{ memo['title'] }}</div>
+                    <div class="memo-item-content">
+                        <i onclick="removeMemo( {{ memo['id'] }} )" class="remove-button far fa-trash-alt"></i>
+                        <div class="memo-item-content-content">
+                            {{ memo['content'] }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="memo-editor">
+                <input type="text" id="memo-id" hidden>
+                <div class="memo-editor-header">
+                    <input type="text" id="memo-title" name="title">
+                </div>
+                <div class="memo-editor-content">
+                    <textarea class="memo-editor-textarea" id="memo-content" name="content" wrap="off"></textarea>
+
+                    <i onClick="saveMemo()" id="save-memo-button" class="far fa-save"></i>
+                </div>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,180 @@
+html, body {
+    margin: 0;
+    height: 100%
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.memo-list {
+    border-right: 1px solid #CFCFCF;
+    flex-basis: 300px;
+    display: flex;
+    flex-direction: column;
+
+    padding: 0;
+
+    background-color: #F5F5F5;
+}
+
+.memo-list-header {
+    height: 100px;
+    margin: 3px;
+    padding: 10px 10px 3px 10px;
+    border-bottom: 1px solid #CFCFCF;
+    position: relative;
+}
+
+#search-bar {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #DDDDDD;
+    background: transparent;
+
+    padding: 2px 5px 2px 5px;
+    height: 30px;
+    position: absolute;
+    bottom: 10px;
+    width: 250px;
+    left: 25px;
+
+    font-size: 20px;
+}
+
+#search-bar:hover {
+    border-bottom: 1px solid #BBBBBB;
+}
+
+#search-bar:focus {
+    border-bottom: 1px solid #BBBBBB;
+}
+
+.memo-item {
+    height: 100px;
+    margin: 0px 5px 0px 5px;
+    padding: 10px 10px 10px 10px;
+    border-bottom: 1px solid #CFCFCF;
+    position: relative;
+}
+
+.memo-item:hover {
+    background-color: #EFEFEF;
+    outline: 2px solid #B0C4DE;
+    
+}
+
+.memo-item-title {
+    font-weight: bold;
+    height: 30px;
+}
+
+#memo-item-list {
+    height: 100%;
+    padding-top: 5px;
+    overflow: auto;
+}
+
+#memo-item-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+#memo-item-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#memo-item-list::-webkit-scrollbar-thumb {
+    background: #AAAAAA;
+}
+
+#memo-item-list::-webkit-scrollbar-thumb:hover {
+    background: #888888;
+}
+
+#create-memo-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #AAAAAA;
+}
+
+#create-memo-button:hover {
+    color: #888888;
+}
+
+.remove-button {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #AAAAAA
+}
+
+.remove-button:hover {
+    color: #888888;
+}
+
+.memo-editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.memo-editor-header {
+    flex-basis: 100px;
+    padding: 20px 10px 10px 20px;
+    border-bottom: 1px solid #CFCFCF;
+    position: relative;
+}
+
+#memo-title {
+    height: 50px;
+    width: 80%;
+    padding: 0 10px 0 10px;
+    border: none;
+    font-size: 20px;
+    position: absolute;
+    bottom: 30px;
+}
+
+#memo-title:hover {
+    outline: 1px solid #E6E6FA;
+}
+
+#memo-title:focus {
+    outline: 1px solid #E6E6FA;
+}
+
+.memo-editor-content {
+    flex: 1;
+    position: relative;
+}
+
+.memo-editor-textarea {
+    width: 90%;
+    height: 90%;
+    margin-top: 15px;
+    margin-left: 30px;
+    resize: none;
+    border: none;
+    font-size: 15px;
+    overflow: hidden;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+#save-memo-button {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-size: 30px;
+    color: #AAAAAA;
+}
+
+#save-memo-button:hover {
+    color: #888888;
+}
