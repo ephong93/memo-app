@@ -11,7 +11,6 @@ function clearMemo(memoId) {
 
         if (xhr.status === 200) {
             responseJSON = JSON.parse(xhr.responseText);
-            console.log(responseJSON);
 
             const memoItem = document.getElementById('memo-item-' + memoId);
             memoItem.getElementsByClassName('memo-item-title')[0].textContent = '';
@@ -29,6 +28,7 @@ function clearMemo(memoId) {
 }
 
 function removeMemo(memoId) {
+    event.stopPropagation();
     let currentMemoId = document.getElementById('memo-id').value;
     const targetMemoItem = document.getElementById('memo-item-' + memoId);
 
@@ -50,7 +50,6 @@ function removeMemo(memoId) {
         return;
     }
 
-    
     const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = (e) => {
@@ -58,8 +57,6 @@ function removeMemo(memoId) {
 
         if (xhr.status === 200) {
             responseJSON = JSON.parse(xhr.responseText);
-            console.log(responseJSON);
-
 
             const memoItemList = document.getElementById('memo-item-list');
             memoItemList.removeChild(targetMemoItem);
@@ -71,7 +68,6 @@ function removeMemo(memoId) {
 
     xhr.open('POST', '/delete/' + memoId);
     xhr.send();
-    
 }
 
 function addMemoItem(newMemo) {
@@ -169,7 +165,6 @@ function saveMemo() {
 
         if (xhr.status === 200) {
             responseJSON = JSON.parse(xhr.responseText);
-            console.log(responseJSON);
             
             if (responseJSON['success'] === true) {
                 const memoItem = document.getElementById('memo-item-' + memoId);
@@ -200,6 +195,8 @@ function saveMemo() {
 function showMemo(memoId) {
     const memoItem = document.getElementById('memo-item-' + memoId);
 
+    //const currentMemoId = document.getElementById('memo-id');
+    //currentMemoId.value = memoId;
     const xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = (e) => {
@@ -228,5 +225,31 @@ function showMemo(memoId) {
 
 function search() {
     const searchText = document.getElementById('search-bar').value;
-    console.log(searchText);
+
+    
+    const xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = (e) => {
+        if (xhr.readyState !== XMLHttpRequest.DONE) return;
+
+        if (xhr.status === 200) {
+            responseJSON = JSON.parse(xhr.responseText);
+            updateMemoItemList(responseJSON);
+        } else {
+            console.log('Error!');
+        }
+    };
+
+    xhr.open('GET', '/search/' + searchText);
+    xhr.send();
+    
+}
+
+
+function updateMemoItemList(memos) {
+    const memoItemList = document.getElementById('memo-item-list');
+    memoItemList.innerHTML = '';
+    for (let i = 0; i < memos.length; i++) {
+        addMemoItem(memos[i]);
+    }
 }

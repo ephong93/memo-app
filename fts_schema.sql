@@ -1,0 +1,1 @@
+create virtual table memo using fts5(title, content);

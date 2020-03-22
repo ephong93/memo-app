@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 
 def connect_db():
-    sql = sqlite3.connect('./memo.db')
+    sql = sqlite3.connect('./fts_memo.db')
     sql.row_factory = sqlite3.Row
     return sql
 
@@ -35,7 +35,7 @@ def dated_url_for(endpoint, **values):
 @app.route('/')
 def index():
     db = get_db()
-    memo_cur = db.execute('select id, title, content from memo order by id desc')
+    memo_cur = db.execute('select rowid as id, title, content from memo order by rowid desc')
     memos = memo_cur.fetchall()
     return render_template('home.html', memos=memos)
 
@@ -52,7 +52,7 @@ def write():
 @app.route('/delete/<memo_id>', methods=['POST'])
 def delete(memo_id):
     db = get_db()
-    db.execute('delete from memo where id=?', [memo_id])
+    db.execute('delete from memo where rowid=?', [memo_id])
     db.commit()
     return jsonify({
         'success': True
@@ -62,11 +62,13 @@ def delete(memo_id):
 
 @app.route('/get_memo/<memo_id>')
 def get_memo(memo_id):
+    print('get_memo, ', memo_id)
     db = get_db()
-    memo_cur = db.execute('select id, title, content from memo where id=?', [memo_id])
+    memo_cur = db.execute('select rowid, title, content from memo where rowid=?', [memo_id])
     memo = memo_cur.fetchone()
+
     return jsonify({
-        'id': memo['id'],
+        'id': memo['rowid'],
         'title': memo['title'],
         'content': memo['content']
     })
@@ -74,24 +76,45 @@ def get_memo(memo_id):
 @app.route('/get_all_memos')
 def get_all_memos():
     db = get_db()
-    memo_cur = db.execute('select id, title, content from memo order by id desc')
+    memo_cur = db.execute('select rowid, title, content from memo order by rowid desc')
     memos = memo_cur.fetchall()
     memos_list = []
     for memo in memos:
+        print(memo)
         memos_list.append({
-            'id': memo['id'],
+            'id': memo['rowid'],
             'title': memo['title'],
             'content': memo['content']
         })
     return jsonify(memos_list)
 
 
+@app.route('/search/', defaults={'query_text': ''})
+@app.route('/search/<query_text>', methods=['GET'])
+def search(query_text):
+    print('query_text: ', query_text)
+    db = get_db()
+    if query_text == '':
+        memo_cur = db.execute('select rowid, title, content from memo')
+    else:
+        memo_cur = db.execute('select rowid, title, content from memo where memo match ?', [query_text + '*'])
+    memos = memo_cur.fetchall()
+    memos_list = []
+    for memo in memos:
+        memos_list.append({
+            'id': memo['rowid'],
+            'title': memo['title'],
+            'content': memo['content']
+        })
+    return jsonify(memos_list)
+
+
+
 @app.route('/save', methods=['POST'])
 def save_memo():
     request_json = request.json
-    print(request_json['title'], request_json['content'], request_json['id'])
     db = get_db()
-    db.execute('update memo set title=?, content=? where id=?', [request_json['title'], request_json['content'], request_json['id']])
+    db.execute('update memo set title=?, content=? where rowid=?', [request_json['title'], request_json['content'], request_json['id']])
     db.commit()
     return jsonify({
         'success': True
@@ -117,7 +140,7 @@ def create_memo():
 @app.route('/clear/<memo_id>', methods=['POST'])
 def clear_memo(memo_id):
     db = get_db()
-    db.execute('update memo set title=?, content=? where id=?', ['', '', memo_id])
+    db.execute('update memo set title=?, content=? where rowid=?', ['', '', memo_id])
     db.commit()
     return jsonify({
         'success': True
